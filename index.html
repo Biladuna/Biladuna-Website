@@ -260,22 +260,21 @@
             </div>
         </section>
 
-        <!-- 5. QR Code Section المباشر والدائم -->
+  <!-- 5. QR Code Section -->
         <section class="section qr-section reveal">
             <div class="glass-card qr-card">
                 <h3>مشاركة الصفحة</h3>
                 <p>امسح الـ QR Code لفتح الصفحة على هاتفك أو مشاركتها مع الآخرين</p>
                 
                 <div class="qr-wrapper">
-                    <!-- جلب الـ QR مباشرة من API بدون أي مكتبات خافية -->
-                    <img id="qr-image" src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://biladuna-net.netlify.app&color=0a1128&ecc=H" alt="Biladuna QR Code" />
+                    <img id="qr-image" src="" alt="Biladuna QR Code" crossorigin="anonymous" />
                     <div class="qr-center-badge">Biladuna</div>
                 </div>
 
-                <a href="https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=https://biladuna-net.netlify.app&color=0a1128&ecc=H" target="_blank" download="Biladuna-QRCode.png" class="btn btn-primary ripple" id="download-qr-btn">
+                <button class="btn btn-primary ripple" id="download-qr-btn">
                     <i class="fa-solid fa-download"></i>
                     <span>تحميل الـ QR Code</span>
-                </a>
+                </button>
             </div>
         </section>
 
