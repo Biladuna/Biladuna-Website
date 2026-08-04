@@ -1,39 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    // ==========================================
-    // 1. Scroll Reveal Animation (مع أمان الإظهار)
-    // ==========================================
+    // 1. Scroll Reveal Animation
     const revealElements = document.querySelectorAll('.reveal');
+    revealElements.forEach(el => el.classList.add('active'));
 
-    if ('IntersectionObserver' in window) {
-        const revealObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, {
-            root: null,
-            threshold: 0.1,
-            rootMargin: '0px 0px -20px 0px'
-        });
-
-        revealElements.forEach(el => revealObserver.observe(el));
-    } else {
-        // دعم المتصفحات القديمة - إظهار كل شيء فوراً
-        revealElements.forEach(el => el.classList.add('active'));
-    }
-
-    // احتياط أمان: إظهار كافة العناصر بعد ثانية واحدة لضمان عدم اختفاء أي قسم
-    setTimeout(() => {
-        revealElements.forEach(el => el.classList.add('active'));
-    }, 1000);
-
-
-    // ==========================================
     // 2. Ripple Effect on Buttons
-    // ==========================================
     const rippleButtons = document.querySelectorAll('.ripple');
 
     rippleButtons.forEach(button => {
@@ -58,9 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    // ==========================================
     // 3. Copy to Clipboard & Toast Notification
-    // ==========================================
     const copyButtons = document.querySelectorAll('.btn-copy');
     const toastContainer = document.getElementById('toast-container');
 
@@ -110,89 +79,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 3000);
     }
 
-  // ==========================================
-    // 4. توليد وتحميل الـ QR Code المدمج بكلمة Biladuna
-    // ==========================================
-    const qrContainer = document.getElementById("qrcode");
+    // 4. تحديث رابط الـ QR Code تلقائياً برابط الصفحة الحالية
+    const qrImage = document.getElementById("qr-image");
     const downloadBtn = document.getElementById("download-qr-btn");
 
-    if (qrContainer) {
-        // تنظيف أي محتوى سابق
-        qrContainer.innerHTML = '';
+    if (qrImage) {
+        const currentUrl = encodeURIComponent(window.location.href);
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${currentUrl}&color=0a1128&ecc=H`;
+        qrImage.src = qrUrl;
 
-        // 1. توليد الـ QR Code الأساسي
-        const qrcode = new QRCode(qrContainer, {
-            text: window.location.href,
-            width: 220,
-            height: 220,
-            colorDark : "#0a1128",
-            colorLight : "#ffffff",
-            correctLevel : QRCode.CorrectLevel.H
-        });
-
-        // 2. دمج كلمة Biladuna في المنتصف بعد اكتمال التوليد
-        setTimeout(() => {
-            const canvas = qrContainer.querySelector('canvas');
-            const imgElement = qrContainer.querySelector('img');
-
-            if (canvas) {
-                const ctx = canvas.getContext('2d');
-                const centerX = canvas.width / 2;
-                const centerY = canvas.height / 2;
-
-                // رسم خلفية الكبسولة في منتصف الـ QR
-                ctx.fillStyle = "#001f54"; // لون أزرق داكن نفس لون الهوية
-                ctx.strokeStyle = "#ffffff"; // إطار أبيض
-                ctx.lineWidth = 3;
-                
-                const boxWidth = 90;
-                const boxHeight = 30;
-                const radius = 8;
-
-                ctx.beginPath();
-                if (ctx.roundRect) {
-                    ctx.roundRect(centerX - boxWidth/2, centerY - boxHeight/2, boxWidth, boxHeight, radius);
-                } else {
-                    ctx.rect(centerX - boxWidth/2, centerY - boxHeight/2, boxWidth, boxHeight);
-                }
-                ctx.fill();
-                ctx.stroke();
-
-                // كتابة كلمة Biladuna في المنتصف
-                ctx.fillStyle = "#90e0ef"; // لون نص أزرق فاتح براق
-                ctx.font = "bold 14px Arial, sans-serif";
-                ctx.textAlign = "center";
-                ctx.textBaseline = "middle";
-                ctx.fillText("Biladuna", centerX, centerY);
-
-                // تحويل الـ Canvas المدمج إلى صورة PNG حقيقية
-                const finalImageData = canvas.toDataURL("image/png");
-
-                // تحديث الصورة في الصفحة ليتضمّن النص دائماً
-                if (imgElement) {
-                    imgElement.src = finalImageData;
-                    imgElement.style.display = "block";
-                    imgElement.style.margin = "0 auto";
-                    canvas.style.display = "none"; // إخفاء الكانفاس وإظهار الصورة النهائية
-                }
-
-                // 3. إعداد زر التحميل للصورة المدمجة
-                if (downloadBtn) {
-                    // إزالة أي مستمعات أحداث سابقة
-                    const newBtn = downloadBtn.cloneNode(true);
-                    downloadBtn.parentNode.replaceChild(newBtn, downloadBtn);
-
-                    newBtn.addEventListener('click', () => {
-                        const link = document.createElement('a');
-                        link.href = finalImageData;
-                        link.download = 'Biladuna-QRCode.png';
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
-                        
-                        showToast('تم تحميل الـ QR Code بنجاح');
-                    });
-                }
-            }
-        }, 600); // إعطاء مهلة 600 ملي ثانية لضمان اكتمال بناء الـ QR Code أولاً
+        if (downloadBtn) {
+            downloadBtn.href = `https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${currentUrl}&color=0a1128&ecc=H`;
+        }
     }
+});
