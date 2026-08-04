@@ -544,3 +544,98 @@ body {
     .subtitle { font-size: 1rem; }
     .payment-wrapper { padding: 20px; }
 }
+
+
+/* ==========================================
+   تنسيقات الأقسام الجديدة والـ QR Code
+   ========================================== */
+
+/* إظهار جميع الأقسام الجديدة بشكل مباشر */
+.reveal {
+    opacity: 1 !important;
+    transform: none !important;
+}
+
+/* ألوان أيقونات الاتصال والبريد والسوق المفتوح */
+.card-icon.opensooq { background: linear-gradient(135deg, #007bff, #0056b3); }
+.card-icon.phone-icon { background: linear-gradient(135deg, #10b981, #059669); }
+.card-icon.email-icon { background: linear-gradient(135deg, #ea4335, #b91c1c); }
+
+/* تنسيق قسم الموقع الجغرافي */
+.location-card {
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.location-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.location-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, #ea4335, #c5221f);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: #ffffff;
+    box-shadow: 0 8px 20px rgba(234, 67, 53, 0.3);
+    flex-shrink: 0;
+}
+
+.location-text h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.location-text p {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+}
+
+.location-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+}
+
+/* تنسيق إطار الـ QR Code وكلمة Biladuna */
+.qr-wrapper {
+    position: relative;
+    padding: 16px;
+    background: #ffffff;
+    border-radius: var(--radius-md);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    display: inline-block;
+    margin: 10px 0;
+}
+
+#qr-image {
+    width: 200px;
+    height: 200px;
+    display: block;
+    margin: 0 auto;
+}
+
+.qr-center-badge {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #001f54;
+    color: #90e0ef;
+    font-weight: 800;
+    font-size: 0.85rem;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    border: 2px solid #ffffff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+}
