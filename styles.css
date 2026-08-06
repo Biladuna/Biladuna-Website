@@ -564,3 +564,7 @@ body {
     .subtitle { font-size: 1rem; }
     .payment-wrapper { padding: 20px; }
 }
+
+.main-title {
+    display: none;
+}
