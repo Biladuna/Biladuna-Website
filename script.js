@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // ==========================================
-    // 4. توليد ودمج كلمة Biladuna داخل صورة الـ QR للتحميل
+    // 4. توليد ودمج صورة اللوجو داخل الـ QR للتحميل
     // ==========================================
     const qrImage = document.getElementById("qr-image");
     const downloadBtn = document.getElementById("download-qr-btn");
@@ -101,57 +101,70 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (downloadBtn) {
             downloadBtn.addEventListener('click', () => {
-                // إنشاء Canvas لدمج الصورة مع كلمة Biladuna
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
-                const img = new Image();
-                img.crossOrigin = "anonymous";
-                img.src = qrUrl;
+                
+                const imgQr = new Image();
+                const imgLogo = new Image();
+                
+                imgQr.crossOrigin = "anonymous";
+                imgLogo.crossOrigin = "anonymous";
+                
+                imgQr.src = qrUrl;
 
-                img.onload = () => {
-                    canvas.width = img.width;
-                    canvas.height = img.height;
+                imgQr.onload = () => {
+                    canvas.width = imgQr.width;
+                    canvas.height = imgQr.height;
 
                     // 1. رسم الـ QR Code الأساسي
-                    ctx.drawImage(img, 0, 0);
+                    ctx.drawImage(imgQr, 0, 0);
 
-                    // 2. رسم خلفية الكبسولة في المنتصف
-                    const centerX = canvas.width / 2;
-                    const centerY = canvas.height / 2;
-                    const boxWidth = 170;
-                    const boxHeight = 55;
-                    const radius = 25;
+                    // 2. تحميل صورة اللوجو لرسمها في منتصف الـ Canvas
+                    imgLogo.src = 'logo.png';
+                    imgLogo.onload = () => {
+                        const centerX = canvas.width / 2;
+                        const centerY = canvas.height / 2;
+                        const logoSize = 110; // حجم اللوجو في الصورة المحملة
 
-                    ctx.fillStyle = "#001f54";
-                    ctx.strokeStyle = "#ffffff";
-                    ctx.lineWidth = 6;
+                        // رسم خلفية دائريّة بيضاء خلف اللوجو
+                        ctx.beginPath();
+                        ctx.arc(centerX, centerY, logoSize / 2 + 6, 0, Math.PI * 2);
+                        ctx.fillStyle = "#ffffff";
+                        ctx.fill();
+                        ctx.lineWidth = 4;
+                        ctx.strokeStyle = "#001f54";
+                        ctx.stroke();
 
-                    ctx.beginPath();
-                    if (ctx.roundRect) {
-                        ctx.roundRect(centerX - boxWidth/2, centerY - boxHeight/2, boxWidth, boxHeight, radius);
-                    } else {
-                        ctx.rect(centerX - boxWidth/2, centerY - boxHeight/2, boxWidth, boxHeight);
-                    }
-                    ctx.fill();
-                    ctx.stroke();
+                        // رسم اللوجو داخل الدائرة
+                        ctx.save();
+                        ctx.beginPath();
+                        ctx.arc(centerX, centerY, logoSize / 2, 0, Math.PI * 2);
+                        ctx.clip();
+                        ctx.drawImage(imgLogo, centerX - logoSize / 2, centerY - logoSize / 2, logoSize, logoSize);
+                        ctx.restore();
 
-                    // 3. كتابة كلمة Biladuna داخل الصورة
-                    ctx.fillStyle = "#90e0ef";
-                    ctx.font = "bold 26px Arial, sans-serif";
-                    ctx.textAlign = "center";
-                    ctx.textBaseline = "middle";
-                    ctx.fillText("Biladuna", centerX, centerY);
+                        // 3. تصدير الصورة وتحميلها
+                        const mergedImageData = canvas.toDataURL("image/png");
+                        const link = document.createElement('a');
+                        link.href = mergedImageData;
+                        link.download = 'Biladuna-QRCode.png';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
 
-                    // 4. تحويل الـ Canvas إلى رابط تنزيل مباشر
-                    const mergedImageData = canvas.toDataURL("image/png");
-                    const link = document.createElement('a');
-                    link.href = mergedImageData;
-                    link.download = 'Biladuna-QRCode.png';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
+                        showToast('تم تحميل الـ QR Code بنجاح');
+                    };
 
-                    showToast('تم تحميل الـ QR Code بنجاح');
+                    // في حال تعذر تحميل صورة اللوجو يتم التحميل بدونها
+                    imgLogo.onerror = () => {
+                        const mergedImageData = canvas.toDataURL("image/png");
+                        const link = document.createElement('a');
+                        link.href = mergedImageData;
+                        link.download = 'Biladuna-QRCode.png';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    };
                 };
             });
         }
