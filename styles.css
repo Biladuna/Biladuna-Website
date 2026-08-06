@@ -470,24 +470,6 @@ body {
     margin: 0 auto;
     border-radius: 8px;
 }
-
-.qr-center-badge {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #001f54;
-    color: #90e0ef;
-    font-family: var(--font-family);
-    font-weight: 800;
-    font-size: 0.85rem;
-    padding: 4px 12px;
-    border-radius: 9999px;
-    border: 2px solid #ffffff;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    pointer-events: none;
-}
-
 .qr-card .btn {
     max-width: 240px;
 }
@@ -568,5 +550,22 @@ body {
 /* إخفاء عنوان بلادنا للإنترنت تماماً */
 .main-title {
     display: none !important;
+}
+
+/* شعار منتصف الـ QR Code */
+.qr-center-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
+    background: #ffffff;
+    padding: 4px;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    border: 2px solid #001f54;
+    pointer-events: none;
 }
 
