@@ -565,3 +565,8 @@ body {
     .payment-wrapper { padding: 20px; }
 }
 
+/* إخفاء عنوان بلادنا للإنترنت تماماً */
+.main-title {
+    display: none !important;
+}
+
