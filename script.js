@@ -87,15 +87,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // ==========================================
-    // 4. توليد ودمج صورة اللوجو داخل الـ QR للتحميل
+  // ==========================================
+    // 4. توليد ودمج صورة اللوجو المباشرة بدون دائرة بدقة عالية (HD)
     // ==========================================
     const qrImage = document.getElementById("qr-image");
     const downloadBtn = document.getElementById("download-qr-btn");
 
     if (qrImage) {
         const currentUrl = encodeURIComponent(window.location.href);
-        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${currentUrl}&color=0a1128&ecc=H`;
+        // رفع الدقة إلى 1000x1000 لمنع الغواش والضبابية تماماً
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=${currentUrl}&color=0a1128&ecc=H`;
         
         qrImage.src = qrUrl;
 
@@ -116,51 +117,45 @@ document.addEventListener('DOMContentLoaded', () => {
                     canvas.width = imgQr.width;
                     canvas.height = imgQr.height;
 
-                    // 1. رسم الـ QR Code الأساسي
+                    // 1. رسم الـ QR Code الأساسي بجودة عالية
                     ctx.drawImage(imgQr, 0, 0);
 
-                    // 2. تحميل صورة اللوجو لرسمها في منتصف الـ Canvas
+                    // 2. تحميل ورسم اللوجو مباشرة بدون دائرة بيضاء
                     imgLogo.src = 'logo.png';
                     imgLogo.onload = () => {
                         const centerX = canvas.width / 2;
                         const centerY = canvas.height / 2;
-                        const logoSize = 110; // حجم اللوجو في الصورة المحملة
+                        
+                        // حجم اللوجو بالنسبة للـ Canvas (220px متناسق جداً مع دقة 1000px)
+                        const logoWidth = 220; 
+                        const logoHeight = (imgLogo.height / imgLogo.width) * logoWidth;
 
-                        // رسم خلفية دائريّة بيضاء خلف اللوجو
-                        ctx.beginPath();
-                        ctx.arc(centerX, centerY, logoSize / 2 + 6, 0, Math.PI * 2);
-                        ctx.fillStyle = "#ffffff";
-                        ctx.fill();
-                        ctx.lineWidth = 4;
-                        ctx.strokeStyle = "#001f54";
-                        ctx.stroke();
+                        // رسم اللوجو مباشرة في المنتصف بالحفاظ على الشفافية
+                        ctx.drawImage(
+                            imgLogo, 
+                            centerX - logoWidth / 2, 
+                            centerY - logoHeight / 2, 
+                            logoWidth, 
+                            logoHeight
+                        );
 
-                        // رسم اللوجو داخل الدائرة
-                        ctx.save();
-                        ctx.beginPath();
-                        ctx.arc(centerX, centerY, logoSize / 2, 0, Math.PI * 2);
-                        ctx.clip();
-                        ctx.drawImage(imgLogo, centerX - logoSize / 2, centerY - logoSize / 2, logoSize, logoSize);
-                        ctx.restore();
-
-                        // 3. تصدير الصورة وتحميلها
-                        const mergedImageData = canvas.toDataURL("image/png");
+                        // 3. تصدير الصورة بجودة عالية جداً
+                        const mergedImageData = canvas.toDataURL("image/png", 1.0);
                         const link = document.createElement('a');
                         link.href = mergedImageData;
-                        link.download = 'Biladuna-QRCode.png';
+                        link.download = 'Biladuna-QRCode-HD.png';
                         document.body.appendChild(link);
                         link.click();
                         document.body.removeChild(link);
 
-                        showToast('تم تحميل الـ QR Code بنجاح');
+                        showToast('تم تحميل الـ QR Code عالي الدقة بنجاح');
                     };
 
-                    // في حال تعذر تحميل صورة اللوجو يتم التحميل بدونها
                     imgLogo.onerror = () => {
                         const mergedImageData = canvas.toDataURL("image/png");
                         const link = document.createElement('a');
                         link.href = mergedImageData;
-                        link.download = 'Biladuna-QRCode.png';
+                        link.download = 'Biladuna-QRCode-HD.png';
                         document.body.appendChild(link);
                         link.click();
                         document.body.removeChild(link);
@@ -169,4 +164,3 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     }
-});
