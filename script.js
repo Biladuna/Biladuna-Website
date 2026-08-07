@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-  // ==========================================
+    // ==========================================
     // 4. توليد ودمج صورة اللوجو المباشرة بدون دائرة بدقة عالية (HD)
     // ==========================================
     const qrImage = document.getElementById("qr-image");
@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (qrImage) {
         const currentUrl = encodeURIComponent(window.location.href);
-        // رفع الدقة إلى 1000x1000 لمنع الغواش والضبابية تماماً
+        // دقة عالية 1000x1000 لمنع أي غواش في الصورة المحملة
         const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=${currentUrl}&color=0a1128&ecc=H`;
         
         qrImage.src = qrUrl;
@@ -126,11 +126,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         const centerX = canvas.width / 2;
                         const centerY = canvas.height / 2;
                         
-                        // حجم اللوجو بالنسبة للـ Canvas (220px متناسق جداً مع دقة 1000px)
+                        // تحديد العرض مع الحفاظ على النسبة والتناسب للارتفاع
                         const logoWidth = 220; 
                         const logoHeight = (imgLogo.height / imgLogo.width) * logoWidth;
 
-                        // رسم اللوجو مباشرة في المنتصف بالحفاظ على الشفافية
+                        // رسم اللوجو المفرغ في المنتصف مباشرة
                         ctx.drawImage(
                             imgLogo, 
                             centerX - logoWidth / 2, 
@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             logoHeight
                         );
 
-                        // 3. تصدير الصورة بجودة عالية جداً
+                        // 3. تصدير الصورة وتحميلها
                         const mergedImageData = canvas.toDataURL("image/png", 1.0);
                         const link = document.createElement('a');
                         link.href = mergedImageData;
@@ -164,3 +164,4 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     }
+});
